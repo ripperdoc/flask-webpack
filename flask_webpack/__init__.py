@@ -126,4 +126,4 @@ class Webpack(object):
         if self.asset_url:
             return '{0}{1}'.format(self.assets_url, self.assets[asset])
         else:
-            return current_app.url_for('static', filename=self.assets[asset], _external)
+            return current_app.url_for('static', filename=self.assets[asset], _external=False)
