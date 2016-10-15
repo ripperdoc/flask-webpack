@@ -58,10 +58,7 @@ class Webpack(object):
             with app.open_resource(webpack_stats, 'r') as stats_json:
                 stats = json.load(stats_json)
 
-                if app.config['WEBPACK_ASSETS_URL']:
-                    self.assets_url = app.config['WEBPACK_ASSETS_URL']
-                else:
-                    self.assets_url = stats['publicPath']
+                self.assets_url = app.config.get('WEBPACK_ASSETS_URL', None) or stats['publicPath']
 
                 self.assets = stats['assets']
         except IOError:
@@ -111,7 +108,7 @@ class Webpack(object):
 
         return '\n'.join(tags)
 
-    def asset_url_for(self, asset):
+    def asset_url_for(self, asset, _external=False):
         """
         Lookup the hashed asset path of a file name unless it starts with
         something that resembles a web address, then take it as is.
@@ -126,4 +123,7 @@ class Webpack(object):
         if asset not in self.assets:
             return None
 
-        return '{0}{1}'.format(self.assets_url, self.assets[asset])
+        if self.asset_url:
+            return '{0}{1}'.format(self.assets_url, self.assets[asset])
+        else:
+            return current_app.url_for('static', filename=self.assets[asset], _external)
