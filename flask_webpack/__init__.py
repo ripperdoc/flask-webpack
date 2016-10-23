@@ -123,7 +123,7 @@ class Webpack(object):
         if asset not in self.assets:
             return None
 
-        if self.assets_url:
-            return '{0}{1}'.format(self.assets_url, self.assets[asset])
-        else:
-            return current_app.url_for('static', filename=self.assets[asset], _external=False)
+        # if self.assets_url:
+        #     return '{0}{1}'.format(self.assets_url, self.assets[asset])
+        # else:
+        return current_app.url_for('static', filename=self.assets[asset], _external=False)
